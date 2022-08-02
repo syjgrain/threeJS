@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 
-// ----- 주제:  텍스쳐 이미지 변환
+// ----- 주제:  MeshToomMaterial(만화느낌)
 
 export default function example() {
 
@@ -23,27 +23,9 @@ export default function example() {
 
 	//텍스쳐 이미지 로드
 	const textureLoader = new THREE.TextureLoader(loadingManager);
-	const texture = textureLoader.load('/textures/skull/Ground Skull_basecolor.jpg');
-	const heightColorTex = textureLoader.load('/textures/brick/Brick_Wall_019_height.png');
-	const normalColorTex = textureLoader.load('/textures/brick/Brick_Wall_019_normal.jpg');
-	const roughnessColorTex = textureLoader.load('/textures/brick/Brick_Wall_019_roughness.jpg');
-	const ambientColorTex = textureLoader.load('/textures/brick/Brick_Wall_019_ambientOcclusion.jpg');
-
-
-	//텍스쳐 변환
-	texture.wrapS = THREE.RepeatWrapping;
-	texture.wrapT = THREE.RepeatWrapping;
-	// texture.offset.x = 0.3;
-	// texture.offset.y = 0.3;
-
-	// texture.repeat.x = 2;
-	// texture.repeat.y = 2;
-
-	// texture.rotation = Math.PI * 0.25;
-	texture.rotation = THREE.MathUtils.degToRad(60);
-	texture.center.x = 0.5;
-	texture.center.y = 0.5;
-
+	const gradientTex = textureLoader.load('/textures/gradient.png');
+	gradientTex.magFilter = THREE.NearestFilter;
+	
 	// Renderer
 	const canvas = document.querySelector('#three-canvas');
 	const renderer = new THREE.WebGLRenderer({
@@ -55,7 +37,7 @@ export default function example() {
 
 	// Scene
 	const scene = new THREE.Scene();
-	scene.background = new THREE.Color('white');
+	// scene.background = new THREE.Color('white');
 
 	// Camera
 	const camera = new THREE.PerspectiveCamera(
@@ -78,10 +60,11 @@ export default function example() {
 	const controls = new OrbitControls(camera, renderer.domElement);
 
 	// Mesh
-	const geometry = new THREE.BoxGeometry(2, 2, 2);
-	const material = new THREE.MeshStandardMaterial({
-		
-		map: texture
+	const geometry = new THREE.ConeGeometry(1,2,128);
+	const material = new THREE.MeshToonMaterial({
+		color : 'plum',
+		gradientMap: gradientTex
+
 	});
 	const mesh = new THREE.Mesh(geometry, material);
 	scene.add(mesh);
